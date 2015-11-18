@@ -67,3 +67,4 @@ insert into work_area (work_area_id,name,work_type_id,area_id,work_mode) values 
 --表必须在mysql已存在，且字列属性应该和oracle上对应的列属性差别
 执行脚本
 $ python transql.py transql_conf.py insert
+ 
