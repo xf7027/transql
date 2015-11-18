@@ -1,4 +1,5 @@
 1   本程序修改自 https://github.com/codeforkjeff/oracle2mysql
+
 2	版本说明（文档适用范围说明）
 操作系统：CentOS 7 Minimal、SELinux disabled、Firewall enable
 软件版本：0.0.2
@@ -142,6 +143,3 @@ $ python transql.py transql_conf.py insert
 测试后升级，无特殊要求
 3、版本升级记录：
 修订内容	日期	版本
-		
-		
-
