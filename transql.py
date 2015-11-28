@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 """
 
@@ -9,14 +11,19 @@ http://www.oracle.com/technetwork/articles/dsl/prez-python-queries-101587.html
 
 """
 
-import os
-# need to set this, or Oracle won't retrieve utf8 chars properly
-os.environ["NLS_LANG"]='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
+import os,time
 import sys
-
 import cx_Oracle
-import cymysql 
+import cymysql
+import transql_conf 
+from multiprocessing import Pool,freeze_support, set_start_method
 
+
+def info(title):
+    print(title)
+    print('module name:', __name__)
+    print('parent process:', os.getppid())
+    print('process id:', os.getpid())
 
 def get_table_metadata(cursor):
     table_metadata = []
@@ -71,39 +78,33 @@ def create_table(mysql, table, table_metadata):
 
     sql += ") DEFAULT CHARACTER SET = utf8;"
 
-    #print sql
-    #print
-    cursor = mysql.cursor()
-    cursor.execute(sql)
+    print(sql)
+    mysql.execute(sql)
 
 
-def migrate_data(oracle, mysql, table):
+def migrate_data(table):
 
-    oracle_cursor = oracle.cursor()
-
-    # cursor.rowcount is supposed to contain # of records in query but
-    # that doesn't seem to work for oracle, so we do SELECT count(*)
-    # instead.
-    print "select count(*) from %s" %(table,)
+    collection=transql_conf.create_collection()
+    coll_oracle=collection[1]
+    coll_mysql=collection[0]
+    oracle_cursor=coll_oracle.cursor()
     oracle_cursor.execute("SELECT count(*) FROM %s" % (table,))
-
+    mysql_cursor = coll_mysql
     total_rows = oracle_cursor.fetchone()[0]
 
-    print "have %s rows" %(total_rows)
 
     oracle_cursor.execute("SELECT * FROM %s" % (table,))
 
     table_metadata = get_table_metadata(oracle_cursor)
 
-    create_table(mysql, table, table_metadata)
+    create_table(coll_mysql, table, table_metadata)
 
-    for x in xrange(total_rows):
+    for x in range(total_rows):
        
 	 # TODO: should probably use fetchmany() and transactions to speed things up
         row = oracle_cursor.fetchone()
-       
-	column_names = []
-        column_values = []
+        column_names=[]
+        column_values=[]
         index = 0
         for column in table_metadata:
             if column['name'] == 'LINES':
@@ -115,48 +116,70 @@ def migrate_data(oracle, mysql, table):
         question_marks = ",".join(["%s" for i in range(len(column_names))])
         sql_insert = "INSERT INTO %s (%s) VALUES (%s)" % \
                      (table, ",".join(column_names), question_marks)
-        mysql_cursor = mysql.cursor()
-	mysql.commit()
+        mysql_cursor.connection.commit()        
         mysql_cursor.execute(sql_insert, column_values)
 
-
-def insert_data(oracle, mysql, sql_count):
-
-    file_select=open("./select.sql","r+")
-    sql_select=file_select.read()
-
-    file_insert=open("./insert.sql","r+")
-    sql_insert=file_insert.read()
-    oracle_cursor = oracle.cursor()
-    oracle_cursor.execute(sql_select)
-
-    sql_count=oracle_cursor.fetchall()
-    for row in sql_count:
-
+def insert_data(list_s_i):
+    info(list_s_i)
+    collection=transql_conf.create_collection() 
+    coll_oracle=collection[1]
+    coll_mysql=collection[0]
+    oracle_cursor = coll_oracle.cursor()
+    oracle_cursor.execute(list_s_i[0])
+    for row in oracle_cursor.fetchall():
+        time.sleep(0.1)
+        print(row)
+        sql_select=[]
+        sql_insert=[]
+        sql_s_i=[]
         column_values = []
         index = 0
         line_count=len(row)
-        for column in xrange(line_count):
+        for column in range(line_count):
             column_values.append(row[index])
             index += 1
-        mysql_cursor = mysql.cursor()
-        mysql_cursor.execute(sql_insert, column_values)
-        mysql.commit()
+        mysql_cursor = coll_mysql
+        mysql_cursor.execute(list_s_i[1], column_values)
+        mysql_cursor.connection.commit()
+
+def pool_insert_data():
+
+   
+    sql_select=[]
+    sql_insert=[]
+    list_s_i=[]
+    with open("./select.sql","r+") as file_select:
+        for line in file_select:
+            sql_select.append(line)
+    with open("./insert.sql","r+") as file_insert:
+        for line in file_insert:
+            sql_insert.append(line)
+
+    if len(sql_select)!=len(sql_insert):
+        print ("select.sql lines not equal insert.sql lines")
+    
+    for a,b in zip(sql_select,sql_insert):
+        list_s_i.append([a,b])
+    PROCESSES=int(len(list_s_i))
+    if PROCESSES>4 :
+       PROCESSES=4
+    with Pool(PROCESSES) as p:
+        p.map(insert_data,list_s_i)
 
 
-def migrate(oracle, mysql, tables,action):
-    for table in tables:
-    	if(action == 'create'):
-   	     print "Doing %s" % (table,)
-       	     migrate_data(oracle, mysql, table)
-	else:
-	     print "Insert " 
-	     insert_data(oracle,mysql,100)
+def migrate():
+  try:
+      tables = transql_conf.tables
+  except AttributeError as e:
+      print (e)
+      sys.exit(1)             
+  for table in tables:
+      migrate_data(table)
 
 if __name__=="__main__":
 
-    if len(sys.argv) < 3:
-        print """Usage: transql.py CONF_MODULE_NAME <create|insert>
+    if len(sys.argv) < 2:
+        print ("""Usage: transql.py  <create|insert>
 
 where CONFIG_MODULE is the name of a python module that defines 3 variables:
   oracle = a cx_Oracle connection object instance, to use for source
@@ -165,26 +188,21 @@ where CONFIG_MODULE is the name of a python module that defines 3 variables:
 
 Example:
 
-# python transql.py transql_conf create
+# python transql.py create
 
-"""
+""")
         sys.exit(0)
 
-    conf_module_name = sys.argv[1]
-    action = sys.argv[2]
+    freeze_support()
+    set_start_method('spawn')
 
-    try:
-        conf_module = __import__(conf_module_name)
-    except ImportError, e:
-        print "ERROR: Could not find config module: %s" % (conf_module_name,)
-        sys.exit(1)
+    action = sys.argv[1]
 
-    try:
-        oracle = conf_module.oracle
-        mysql = conf_module.mysql
-        tables = conf_module.tables
-    except AttributeError, e:
-        print e
-        sys.exit(1)
+    if(action == 'create'):
+             print ("create")
+             migrate()
+    else:
+             print ("Insert")
+             pool_insert_data()
 
-    migrate(oracle, mysql, tables,action)
+	

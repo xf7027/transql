@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 """
 
@@ -12,12 +14,15 @@ import sys
 import cx_Oracle
 import cymysql 
 
-
-oracle = cx_Oracle.connect('user', 'password', "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 1.1.1.1)(PORT = 1521))) (CONNECT_DATA = (SID = sid)(SERVER = DEDICATED)))" )
-
-
-mysql=cymysql.connect(host='1.1.1.2', user='test', passwd='test', port=8066,db='CPS')
-
+def create_collection():
+  collect=[]
+  os.environ['NLS_LANG']='SIMPLIFIED CHINESE_CHINA.UTF8'
+  with cymysql.connect(host='xx.xx.xx.xx', user='test', passwd='test', port=8066,db='xx') as mysql:
+      collect.append(mysql)
+  with cx_Oracle.connect('username', 'userpasswd', "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = xx.xx.xx.xx)(PORT = xx))) (CONNECT_DATA = (SID= xx)(SERVER = DEDICATED)))" ) as oracle:
+      collect.append(oracle)
+  return collect
 tables = (
-    'TABLE_NAME',
+    'work_area',
 )
+
