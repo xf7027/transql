@@ -3,8 +3,8 @@
 2 版本说明（文档适用范围说明）  
   
 操作系统：CentOS 7 Minimal、SELinux disabled、Firewall enable  
-软件版本：0.0.2  
-依赖软件及版本：gcc，python2.6，cx_Oracle-5.1.2，cymysql-0.8.5  
+软件版本：0.0.4  
+依赖软件及版本：gcc，python3.5，cx_Oracle-5.2，cymysql-0.8.5  
   
 3 简介  
 从oracle迁移表到mysql时，先提取oracle表的元数据，转换成mysql对应的数据并生成一个同名的表，然后将数据一行一行导入mysql。  
@@ -12,8 +12,8 @@
   
 4 部署  
 4.2 基本安装  
-4.2.1 安装python2.6  
-$ ./rpm –ivh python-2.6.6-64.el6.x86_64.rpm  
+4.2.1 安装python3.5  
+官网下载源码包，编译安装  
 4.2.2 安装oracle数据库模块  
 4.2.2.1 安装oracle简易客户端  
 解压basic-10.2.0.5.0-linux-x64.zip，将解压出来的instantclient_10_2上传至服务器 /mysql/component  
@@ -56,7 +56,7 @@ mysql=cymysql.connect(host='host_ip', user='test', passwd='test', port=8066,db='
 --按实际情况填写, CPS为表所在的数据库名  
   
 执行脚本  
-$ python transql.py transql_conf.py create   
+$ python transql.py create   
 5.1.2 从oracle查找部分数据插入到mysql  
 编辑select.sql，写入查找语句，例：  
 select work_area_id,name,work_type_id,area_id,work_mode from work_area   
@@ -66,5 +66,10 @@ select work_area_id,name,work_type_id,area_id,work_mode from work_area
 insert into work_area (work_area_id,name,work_type_id,area_id,work_mode) values (%s,%s,%s,%s,%s)  
 --表必须在mysql已存在，且字列属性应该和oracle上对应的列属性差别  
 执行脚本  
-$ python transql.py transql_conf.py insert  
+$ python transql.py insert  
 
+0.0.4版变化：
+增加多进程
+兼容python3.5语法，不兼容2.X版本
+打开句柄改用with语法
+修改程序结构，配置文件模块内置
