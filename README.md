@@ -1,11 +1,11 @@
-﻿1 版本说明（文档适用范围说明）  
+1 版本说明（文档适用范围说明）  
   
 操作系统：CentOS 6+ Minimal、SELinux disabled、Firewall disabled  
 软件版本：0.0.8 
 依赖软件及版本：gcc，python3.x，cx_Oracle-5.1.2，cymysql-0.8.5  
   
 2 简介  
-Oracle和Mysql互相迁移数据，可同时迁移多个不同数据库数据（并发的将数据A从oracle迁移到mysql，数据B从mysql迁移到oracle，数据C从oracle迁移到oracle，数据D从mysql迁移到mysql），效率高，支持LOB字段迁移。支持中文数据迁移。  
+Oracle和Mysql互相迁移数据，可同时迁移多个不同数据库数据（并发的将数据在oracle和mysql之间随意迁移），效率高（实际测试表明，将100万数据从oracle迁移到mysql耗时2分30秒，其中1分30秒耗在oracle查询上），支持LOB字段迁移，支持中文数据迁移。  
   
 3 部署  
 3.1 基本安装  
@@ -81,7 +81,7 @@ $ python transql.py y
 5.2 新增
 增加了oracle至oracle，mysql至mysql，mysql至oracle迁移功能；
 增加了LOB字段迁移功能；
-增加了数据分片插入功能；
+增加了数据分片插入功能，配合插入多进程大大提高了数据迁移速度；
 增加了一些显示运行状态的日志。
 5.3 更改
 更改了程序结构，程序代码较原先版本变得清晰。
