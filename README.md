@@ -1,7 +1,7 @@
 1 版本说明（文档适用范围说明）  
   
 操作系统：CentOS 6+ Minimal、SELinux disabled、Firewall disabled  
-软件版本：0.0.8
+软件版本：0.0.8   
 依赖软件及版本：gcc，python3.x，cx_Oracle-5.1.2，cymysql-0.8.5  
   
 2 简介  
