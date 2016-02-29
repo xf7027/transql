@@ -43,13 +43,16 @@ $ python setup.py install
 $ vi transql_conf.py   
 
 ORACLE_CONF = [   
-{'db_flag':'db01' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1522))) (CONNECT_DATA = (SID= xxxx)(SERVER = DEDICATED)))'''},
+
+	{'db_flag':'db01' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1522))) (CONNECT_DATA = (SID= xxxx)(SERVER = DEDICATED)))'''},
 
 	{'db_flag':'db03' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1521)))(CONNECT_DATA =(SID = xxxx)))'''}   
 ]
 
 MYSQL_CONF = [   
+	
 	{'db_flag':'db02','host':'xxx.xxx.xxx.xx','user':'xxxx','passwd':'xxxx','port':331x,'db':'xxx'},
+	
 	{'db_flag':'db04','host':'xxx.xxx.xxx.xx','user':'xxxx','passwd':'xxxx','port':331x,'db':'xxx'}    
 ]
 
@@ -70,18 +73,19 @@ SQL_INSERT = [
    
 4.1.3 执行脚本 
 执行脚本  
-$ python transql.py 
-如果查询的数据里有LOB，后面加“y“：
-$ python transql.py y
-目前测试发现：mysql至mysql，mysql至oracle，oracle至oracle间迁移LOB数据不需要特殊处理（即不需要加y）。
-5 新版本特征
+$ python transql.py   
+如果查询的数据里有LOB，后面加“y“：   
+$ python transql.py y   
+目前测试发现：mysql至mysql，mysql至oracle，oracle至oracle间迁移LOB数据不需要特殊处理（即不需要加y）。   
+
+5 新版本特征   
 5.1 移除
 去掉了原先版本中失败率极高的表创建功能，以后会专门写个程序实现此功能；
-去掉了insert和select两个配置文件。
+去掉了insert和select两个配置文件。    
 5.2 新增
-增加了oracle至oracle，mysql至mysql，mysql至oracle迁移功能；
-增加了LOB字段迁移功能；
-增加了数据分片插入功能，配合插入多进程大大提高了数据迁移速度；
-增加了一些显示运行状态的日志。
+增加了oracle至oracle，mysql至mysql，mysql至oracle迁移功能；    
+增加了LOB字段迁移功能；   
+增加了数据分片插入功能，配合插入多进程大大提高了数据迁移速度；    
+增加了一些显示运行状态的日志。    
 5.3 更改
 更改了程序结构，程序代码较原先版本变得清晰。
