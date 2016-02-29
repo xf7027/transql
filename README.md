@@ -42,15 +42,15 @@ $ python setup.py install
 编辑transql_conf.py，将oracle和mysql的连接配置分别放在ORACLE_CONF和MYSQL_CONF列表里  
 $ vi transql_conf.py   
 
-ORACLE_CONF = [
-	{'db_flag':'db01' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1522))) (CONNECT_DATA = (SID= xxxx)(SERVER = DEDICATED)))'''},
+ORACLE_CONF = [   
+{'db_flag':'db01' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1522))) (CONNECT_DATA = (SID= xxxx)(SERVER = DEDICATED)))'''},
 
-	{'db_flag':'db03' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1521)))(CONNECT_DATA =(SID = xxxx)))'''}
+	{'db_flag':'db03' , 'user':'xxx' , 'passwd':'xxx','tns_names':'''(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = xxx.xxx.x.xx)(PORT = 1521)))(CONNECT_DATA =(SID = xxxx)))'''}   
 ]
 
-MYSQL_CONF = [
+MYSQL_CONF = [   
 	{'db_flag':'db02','host':'xxx.xxx.xxx.xx','user':'xxxx','passwd':'xxxx','port':331x,'db':'xxx'},
-	{'db_flag':'db04','host':'xxx.xxx.xxx.xx','user':'xxxx','passwd':'xxxx','port':331x,'db':'xxx'}
+	{'db_flag':'db04','host':'xxx.xxx.xxx.xx','user':'xxxx','passwd':'xxxx','port':331x,'db':'xxx'}    
 ]
 
   
