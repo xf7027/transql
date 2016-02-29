@@ -1,7 +1,8 @@
 1 版本说明（文档适用范围说明）  
   
 操作系统：CentOS 6+ Minimal、SELinux disabled、Firewall disabled  
-软件版本：0.0.8依赖软件及版本：gcc，python3.x，cx_Oracle-5.1.2，cymysql-0.8.5  
+软件版本：0.0.8
+依赖软件及版本：gcc，python3.x，cx_Oracle-5.1.2，cymysql-0.8.5  
   
 2 简介  
 Oracle和Mysql互相迁移数据，可同时迁移多个不同数据库数据（并发的将数据在oracle和mysql之间随意迁移），效率高（实际测试表明，将100万数据从oracle迁移到mysql耗时2分30秒，其中1分30秒耗在oracle查询上），支持LOB字段迁移，支持中文数据迁移。  
