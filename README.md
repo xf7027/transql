@@ -10,11 +10,11 @@ Oracle和Mysql互相迁移数据，可同时迁移多个不同数据库数据（
 3 部署  
 3.1 基本安装  
 3.1.1 安装python3.x  
-1.下载最新的源码包：Python-3.5.1.tgz  
-2.$ ./configure   
-3.$ make   
-4.$ make test   
-5.$ sudo make install  
+	1.下载最新的源码包：Python-3.5.1.tgz，解压并进入解压后的目录    
+	2.$ ./configure   
+	3.$ make   
+	4.$ make test   
+	5.$ sudo make install  
 3.1.2 安装oracle数据库模块  
 3.1.2.1 安装oracle简易客户端  
 解压basic-10.2.0.5.0-linux-x64.zip，将解压出来的instantclient_10_2上传至服务器 /mysql/component  
