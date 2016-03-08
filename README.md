@@ -12,7 +12,7 @@ Oracle和Mysql互相迁移数据，可同时迁移多个不同数据库数据（
 3.1.1 安装python3.x  
 	1.下载最新的源码包：Python-3.5.1.tgz，解压并进入解压后的目录    
 	2.$ ./configure   
-	3.$ make   
+        3.$ make   
 	4.$ make test   
 	5.$ sudo make install  
 3.1.2 安装oracle数据库模块  
