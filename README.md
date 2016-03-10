@@ -43,10 +43,9 @@ $ cd cymysql-0.8.5
 $ python setup.py build  
 $ python setup.py install  
 3.1.3.3	设置共享库变量
-# vi /etc/ld.so.conf.d/mysql-x86_64.conf
+#vi /etc/ld.so.conf.d/mysql-86_64.conf
 /usr/lib64/mysql
 #ldconfig
-
   
 4 运维  
 4.1 日常操作  
