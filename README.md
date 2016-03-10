@@ -27,10 +27,13 @@ export TNS_ADMIN=/mysql/component/instantclient_12_1
 export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'  
 export NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'  
 $ source .bash_profile 使新增的变量生效  
-3.1.2.3 导入ORA文件  
-将TNSNAMES.ORA放入 /mysql/component/instantclient_10_2目录内  
+3.1.2.3 设置共享库环境变量 
+#vi /etc/ld.so.conf.d/oracle-x86_64.conf
+/mysql/component/instantclient_12_1
+#ldconfig
 3.1.2.4 安装oracle模块  
-$ rpm –ivh cx_Oracle-5.1.2-10g-py26-1.x86_64.rpm  
+$ rpm –ivh cx_Oracle-5.1.2-10g-py26-1.x86_64.rpm    
+  
 3.1.3 安装mysql数据库模块  
 3.1.3.1 安装mysql类包  
 $ rpm –ivh mysql-libs-5.1.73-5.el6_6.x86_64  
@@ -39,6 +42,11 @@ $ tar xzvf cymysql-0.8.5.tar.gz
 $ cd cymysql-0.8.5  
 $ python setup.py build  
 $ python setup.py install  
+3.1.3.3	设置共享库变量
+# vi /etc/ld.so.conf.d/mysql-x86_64.conf
+/usr/lib64/mysql
+#ldconfig
+
   
 4 运维  
 4.1 日常操作  
