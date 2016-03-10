@@ -28,8 +28,8 @@ export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
 export NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'  
 $ source .bash_profile 使新增的变量生效  
 3.1.2.3 设置共享库环境变量 
-$ sudo vi /etc/ld.so.conf.d/oracle-x86_64.conf
-  /mysql/component/instantclient_12_1
+$ sudo vi /etc/ld.so.conf.d/oracle-x86_64.conf   
+   /mysql/component/instantclient_12_1   
 $ sudo ldconfig
 3.1.2.4 安装oracle模块  
 $ rpm –ivh cx_Oracle-5.1.2-10g-py26-1.x86_64.rpm    
@@ -43,8 +43,8 @@ $ cd cymysql-0.8.5
 $ python setup.py build  
 $ python setup.py install  
 3.1.3.3	设置共享库变量
-$ sudo vi /etc/ld.so.conf.d/mysql-86_64.conf
-  /usr/lib64/mysql
+$ sudo vi /etc/ld.so.conf.d/mysql-86_64.conf   
+  /usr/lib64/mysql   
 $ sudo ldconfig   
 
 
