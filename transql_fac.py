@@ -6,7 +6,7 @@
 import functools
 import os
 import sys
-
+from time import sleep
 import cx_Oracle
 import cymysql 
 
@@ -48,10 +48,9 @@ class Db_obj(object):
 	@exc
 	def get_result(self,db_sql):
 		print("start execute ",db_sql.sql)
-		self.cursor.execute(db_sql.sql)
-		print("end execute ",db_sql.sql)
+		rows=self.cursor.execute(db_sql.sql)
 		if(self.lob_flag in ('y','Y')):
-			return self.LOB_format(list(self.cursor))
+			return self.LOB_format(self.cursor)
 		elif(self.lob_flag in ('n','N')):
 			return list(self.cursor)
 		else:
@@ -63,7 +62,8 @@ class Db_obj(object):
 		if(db_sql.isemptyvalue()):
 			row_num = self.cursor.executemany(db_sql.sql,[])
 		else:
-			print("start execute ",db_sql.sql)
+		#	print("start execute ","sql:",db_sql.sql,"value:",db_sql.value)
+			print("===========",len(db_sql.value))
 			row_num = self.cursor.executemany(db_sql.sql,db_sql.value)
 		print(__name__,"execute",row_num,"lines")
 		self.conn.commit()
@@ -75,19 +75,23 @@ class Db_obj(object):
 			return 0
 		return sql_execute_values
 
-	def LOB_format(self,value):
-		row_value = []
-		col_value = []
-		for row in value:
-			for col in row:
+	def LOB_format(self,cursor):
+		print("start LOB_format")
+		row_value_b = []
+		row_value=cursor.fetchone()
+		while(row_value!=None): 
+			col_value = []
+			for col in row_value:
 				if(type(col) == cx_Oracle.LOB):
 					col = col.read()
 					col = col.decode(encoding='gbk', errors='ignore')
 					col_value.append(col)
 				else:
 					col_value.append(col)
-			row_value.append(col_value)
-		return row_value
+		#		print("col_value:",type(col_value),col_value,"\n")
+			row_value_b.append(col_value)
+			row_value=cursor.fetchone()
+		return row_value_b
 
 
 class Db_obj_oracle(Db_obj):
