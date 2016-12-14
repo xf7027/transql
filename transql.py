@@ -86,12 +86,13 @@ def select_sql_execute(args):
 	print(ins_db_obj)
 	ins_sql = Db_sql(s_sql)
 	l_values = ins_db_obj.get_result(ins_sql)
-	
-	l_insert_conf = [d_db_flag,d_sql]
-	l_insert = list(map(lambda l:l_insert_conf+l,l_slice(l_values)))	
 
-	with Pool(len(l_insert)) as p:
-		p.map(insert_sql_execute,l_insert)
+	if l_values:	
+		l_insert_conf = [d_db_flag,d_sql]
+		l_insert = list(map(lambda l:l_insert_conf+l,l_slice(l_values)))	
+
+		with Pool(len(l_insert)) as p:
+			p.map(insert_sql_execute,l_insert)
 	return 0
 
 
